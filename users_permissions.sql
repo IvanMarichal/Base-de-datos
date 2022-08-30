@@ -14,9 +14,11 @@ CREATE USER 'apiauth'@localhost IDENTIFIED BY 'ApiAuthMysql1!';
 GRANT SELECT, INSERT, UPDATE ON user TO 'apiauth'@localhost;
 
 CREATE USER 'apiresults'@localhost IDENTIFIED BY 'ApiResultsMysql1!';
-GRANT SELECT ON result_by_points TO 'apiresults'@localhost; 
-GRANT SELECT ON result_by_mark TO 'apiresults'@localhost;
-GRANT SELECT ON result_by_set TO 'apiresults'@localhost;
+GRANT SELECT ON avocado_database.* TO 'apiresults'@localhost; 
+FLUSH PRIVILEGES;
+REVOKE SELECT ON user FROM 'apiresults'@localhost;
+REVOKE SELECT ON client FROM 'apiresults'@localhost;
+REVOKE SELECT ON card FROM 'apiresults'@localhost;
 
 CREATE USER 'apiads'@localhost IDENTIFIED BY 'ApiAdsMysql1!';
 GRANT SELECT, INSERT, UPDATE ON ads TO 'apiads'@localhost;

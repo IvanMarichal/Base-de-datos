@@ -227,7 +227,7 @@ CREATE TABLE `card` (
 
 CREATE TABLE `card_number_card` (
   `id_card` INT UNSIGNED PRIMARY KEY,
-  `card_number` INT(16) NOT NULL,
+  `card_number` VARCHAR(16) NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL
@@ -355,6 +355,7 @@ CREATE TABLE `set_player_team_event` (
 );
 
 CREATE TABLE `player_team_event_sanction_card` (
+  `id` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `id_player` INT UNSIGNED,
   `id_team` INT UNSIGNED,
@@ -363,10 +364,11 @@ CREATE TABLE `player_team_event_sanction_card` (
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_sanction`, `id_player`, `id_team`, `id_event`)
+  PRIMARY KEY (`id`,`id_sanction`, `id_player`, `id_team`, `id_event`)
 );
 
 CREATE TABLE `player_team_event_sanction_cardless` (
+  `id` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `id_player` INT UNSIGNED,
   `id_team` INT UNSIGNED,
@@ -375,7 +377,7 @@ CREATE TABLE `player_team_event_sanction_cardless` (
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_sanction`, `id_player`, `id_team`, `id_event`)
+  PRIMARY KEY (`id`,`id_sanction`, `id_player`, `id_team`, `id_event`)
 );
 
 CREATE TABLE `result_by_mark` (
@@ -457,43 +459,47 @@ CREATE TABLE `player_league` (
 );
 
 CREATE TABLE `player_local_sanction_card` (
+  `id` INT UNSIGNED,
   `id_event` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `minute` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_event`, `id_sanction`)
+  PRIMARY KEY (`id`,`id_event`, `id_sanction`)
 );
 
 CREATE TABLE `player_local_sanction_cardless` (
+  `id` INT UNSIGNED,
   `id_event` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `minute` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_event`, `id_sanction`)
+  PRIMARY KEY (`id`,`id_event`, `id_sanction`)
 );
 
 CREATE TABLE `player_visitor_sanction_card` (
+  `id` INT UNSIGNED,
   `id_event` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `minute` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_event`, `id_sanction`)
+  PRIMARY KEY (`id`,`id_event`, `id_sanction`)
 );
 
 CREATE TABLE `player_visitor_sanction_cardless` (
+  `id` INT UNSIGNED,
   `id_event` INT UNSIGNED,
   `id_sanction` INT UNSIGNED,
   `minute` VARCHAR(255) NOT NULL,
   `created_at` TIMESTAMP NULL DEFAULT NULL,
   `updated_at` TIMESTAMP NULL DEFAULT NULL,
   `deleted_at` TIMESTAMP NULL DEFAULT NULL,
-  PRIMARY KEY (`id_event`, `id_sanction`)
+  PRIMARY KEY (`id`,`id_event`, `id_sanction`)
 );
 
 
@@ -682,7 +688,7 @@ ALTER TABLE `player_team` ADD FOREIGN KEY (`id_player`) REFERENCES `player` (`id
 
 ALTER TABLE `player_team` ADD FOREIGN KEY (`id_team`) REFERENCES `team` (`id`);
 
-ALTER TABLE `player_team` ADD FOREIGN KEY (`id_player`, `id_team`) REFERENCES `player_team_shirt_number` (`id_player`, `id_team`);
+ALTER TABLE `player_team_shirt_number` ADD FOREIGN KEY (`id_player`, `id_team`) REFERENCES `player_team` (`id_player`, `id_team`);
 
 ALTER TABLE `manager_team` ADD FOREIGN KEY (`id_team`) REFERENCES `team` (`id`);
 
@@ -696,7 +702,7 @@ ALTER TABLE `player_team_event` ADD FOREIGN KEY (`id_event`) REFERENCES `event` 
 
 ALTER TABLE `player_team` ADD FOREIGN KEY (`id_player`, `id_team`) REFERENCES `player_team_event` (`id_player`, `id_team`);
 
-ALTER TABLE `set` ADD FOREIGN KEY (`id`, `id_by_set`) REFERENCES `set_player_team_event` (`id_set`, `id_by_set`);
+ALTER TABLE `set_player_team_event` ADD FOREIGN KEY (`id_set`, `id_by_set`) REFERENCES `set` (`id`, `id_by_set`);
 
 ALTER TABLE `set_player_team_event` ADD FOREIGN KEY (`id_player`, `id_team`, `id_event`) REFERENCES `player_team_event` (`id_player`, `id_team`, `id_event`);
 
@@ -709,8 +715,6 @@ ALTER TABLE `player_team_event_sanction_cardless` ADD FOREIGN KEY (`id_player`, 
 ALTER TABLE `player_team_event_sanction_cardless` ADD FOREIGN KEY (`id_sanction`) REFERENCES `sanction_cardless` (`id_sanction`);
 
 ALTER TABLE `result_by_mark` ADD FOREIGN KEY (`id_player`, `id_team`, `id_event`) REFERENCES `player_team_event` (`id_player`, `id_team`, `id_event`);
-
-ALTER TABLE `result_by_set` ADD FOREIGN KEY (`id`) REFERENCES `set` (`id`);
 
 ALTER TABLE `result_by_points` ADD FOREIGN KEY (`id_player`, `id_team`, `id_event`) REFERENCES `player_team_event` (`id_player`, `id_team`, `id_event`);
 
